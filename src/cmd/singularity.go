@@ -29,9 +29,9 @@ func completer(d prompt.Document) []prompt.Suggest {
 func main() {
 	//go executeCronJob()
 	options.Welcome()
-	commandTree := commands.Load()
 	config.LoadConfiguration()
 	preload.Preload()
+	commandTree := commands.Load()
 	plan := Input()
 	Validate(plan, commandTree)
 	Loop(plan, commandTree)

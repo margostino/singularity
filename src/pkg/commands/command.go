@@ -87,7 +87,7 @@ func (c Command) Validate(plan []string) bool {
 		return false
 	}
 
-	if len(c.SubCommands) == 0 && plan[0] == c.Id {
+	if len(c.SubCommands) == 0 && plan[0] == c.Id && c.Action != nil {
 		return true
 	}
 
