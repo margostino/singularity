@@ -3,21 +3,58 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/c-bata/go-prompt"
 	"github.com/jasonlvhit/gocron"
+	"org.gene/singularity/pkg/commands"
 	"org.gene/singularity/pkg/config"
 	"org.gene/singularity/pkg/options"
 	"org.gene/singularity/pkg/preload"
 	"os"
+	"strings"
 	"time"
 )
 
+func completer(d prompt.Document) []prompt.Suggest {
+	s := []prompt.Suggest{
+		{Text: "show help", Description: "Show Game Rules and Commands"},
+		{Text: "show players", Description: "Show current players"},
+		{Text: "show stats", Description: "Show game stats"},
+		{Text: "create player", Description: "Create new player"},
+		{Text: "start", Description: "Start the game"},
+		{Text: "exit", Description: "Exit the game"},
+	}
+	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
+}
+
 func main() {
 	//go executeCronJob()
+	options.Welcome()
+	commandTree := commands.Load()
 	config.LoadConfiguration()
 	preload.Preload()
-	options.PrintMainMenu()
-	process()
-	//SomeAPICallHandler() // handler which accepts requests and responds
+	plan := Input()
+	Validate(plan, commandTree)
+	Loop(plan, commandTree)
+}
+
+func Loop(plan []string, commandTree *commands.CommandTree) {
+	for {
+		action := commandTree.Process(plan)
+		action.Execute()
+		plan = Input()
+	}
+}
+
+func Validate(plan []string, commandTree *commands.CommandTree) {
+	if !commandTree.IsValidPlan(plan) {
+		fmt.Printf("command plan %q is not valid\n", plan)
+		os.Exit(1)
+	}
+}
+
+func Input() []string {
+	commandLine := options.Prompt()
+	return strings.Fields(commandLine)
 }
 
 func process() {

@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/brianvoe/gofakeit/v6 v6.4.1
+	github.com/c-bata/go-prompt v0.2.6
 	github.com/go-resty/resty/v2 v2.6.0
 	github.com/google/uuid v1.2.0
 	github.com/jasonlvhit/gocron v0.0.1

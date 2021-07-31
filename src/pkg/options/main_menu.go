@@ -2,6 +2,7 @@ package options
 
 import (
 	"fmt"
+	"github.com/c-bata/go-prompt"
 	"org.gene/singularity/pkg/db"
 )
 
@@ -11,7 +12,7 @@ type MainMenu struct {
 }
 
 func (menu MainMenu) show() {
-	PrintMainMenu()
+	//PrintMainMenu()
 }
 
 func (menu MainMenu) prev() int {
@@ -27,21 +28,31 @@ func NewMainMenu() MainMenu {
 }
 
 func PrintMainMenu() {
-	//clear()
-	fmt.Println("---------------------")
-	fmt.Println("Main Menu")
-	fmt.Println("[1] - Show Rules")
-	fmt.Println("[2] - Create Player")
-	fmt.Println("[3] - Show Players")
-	fmt.Println("[4] - Start")
-	fmt.Println("[x] - Exit")
-	fmt.Println("---------------------")
-	printPrompt()
+
+}
+func completer(d prompt.Document) []prompt.Suggest {
+	s := []prompt.Suggest{
+		{Text: "show help", Description: "Show Game Rules and Commands"},
+		{Text: "show players", Description: "Show current players"},
+		{Text: "show stats", Description: "Show game stats"},
+		{Text: "create player", Description: "Create new player"},
+		{Text: "start", Description: "Start the game"},
+		{Text: "exit", Description: "Exit the game"},
+	}
+	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
 
-func printPrompt()  {
-	fmt.Print("@>> ")
+func Welcome() {
+	fmt.Println("------------------------------------------------")
+	fmt.Println("Welcome to Singularity! Please select a command.")
+	fmt.Println("------------------------------------------------")
 }
+
+func Prompt() string {
+	//clear()
+	return prompt.Input("@> ", completer)
+}
+
 func processMainOption(option int, input Input) Input {
 	switch option {
 	case 1:
