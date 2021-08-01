@@ -34,49 +34,30 @@ func Load() *CommandTree {
 	commands := make([]*Command, 0)
 	show := createShowCommand()
 	create := createCreateCommand()
-	exit := createExitCommand()
-	commands = append(commands, show, create, exit)
+	exit := createCommand("exit", NewAction(ExecuteExit))
+	start := createCommand("start", NewAction(ExecuteStart))
+	commands = append(commands, show, create, exit, start)
 	return NewCommandTree(commands)
 }
 
 func createShowCommand() *Command {
-	subCommandHelp := createShowHelpCommand()
-	subCommandPlayers := createShowPlayersCommand()
-	return NewCommand("show").SubCommand(subCommandHelp).SubCommand(subCommandPlayers)
-}
-
-func createExitCommand() *Command {
-	exitAction := NewExitAction()
-	return NewCommand("exit").WithAction(&exitAction.Action)
+	help := createCommand("help", NewAction(ExecuteShowHelp))
+	players := createCommand("players", NewAction(ExecuteShowPlayers))
+	stats := createCommand("stats", NewAction(ExecuteShowStats))
+	return NewCommand("show").
+		SubCommand(help).
+		SubCommand(players).
+		SubCommand(stats)
 }
 
 func createCreateCommand() *Command {
-	subCommandPlayer := createCreatePlayerCommand()
-	return NewCommand("create").SubCommand(subCommandPlayer)
+	player := createCommand("player", NewAction(ExecuteCreatePlayer))
+	return NewCommand("create").
+		SubCommand(player)
 }
 
-func createCreatePlayerCommand() *Command {
-	createPlayer := NewCreatePlayerAction()
-	return NewCommand("players").WithAction(&createPlayer.Action)
-}
-
-func createShowHelpCommand() *Command {
-	showHelp := NewShowHelpAction()
-	return NewCommand("help").WithAction(&showHelp.Action)
-}
-
-func createShowPlayersCommand() *Command {
-	showPlayers := NewShowPlayersAction()
-	return NewCommand("players").WithAction(&showPlayers.Action)
-}
-
-func IsValidPlan(plan []string, commands []*Command) bool {
-	for _, command := range commands {
-		if command.Validate(plan) {
-			return true
-		}
-	}
-	return false
+func createCommand(id string, action *Action) *Command {
+	return NewCommand(id).WithAction(action)
 }
 
 func (c Command) Validate(plan []string) bool {

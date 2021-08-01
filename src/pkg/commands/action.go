@@ -1,9 +1,14 @@
 package commands
 
 type Action struct {
-	name  string
 	apply func()
-	exit bool
+	exit  bool
+}
+
+func NewAction(apply func()) *Action {
+	return &Action{
+		apply: apply,
+	}
 }
 
 func (a Action) Execute() {

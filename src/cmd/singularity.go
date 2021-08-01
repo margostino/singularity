@@ -1,34 +1,19 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"github.com/c-bata/go-prompt"
 	"github.com/jasonlvhit/gocron"
 	"org.gene/singularity/pkg/commands"
 	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/options"
 	"org.gene/singularity/pkg/preload"
 	"os"
 	"strings"
 	"time"
 )
 
-func completer(d prompt.Document) []prompt.Suggest {
-	s := []prompt.Suggest{
-		{Text: "show help", Description: "Show Game Rules and Commands"},
-		{Text: "show players", Description: "Show current players"},
-		{Text: "show stats", Description: "Show game stats"},
-		{Text: "create player", Description: "Create new player"},
-		{Text: "start", Description: "Start the game"},
-		{Text: "exit", Description: "Exit the game"},
-	}
-	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
-}
-
 func main() {
 	//go executeCronJob()
-	options.Welcome()
+	commands.Welcome()
 	config.LoadConfiguration()
 	preload.Preload()
 	commandTree := commands.Load()
@@ -53,18 +38,8 @@ func Validate(plan []string, commandTree *commands.CommandTree) {
 }
 
 func Input() []string {
-	commandLine := options.Prompt()
+	commandLine := commands.Prompt()
 	return strings.Fields(commandLine)
-}
-
-func process() {
-	var input = options.Input{Value: nil, Menu: options.NewMainMenu()}
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		option := options.ProcessInput(*reader)
-		input.Value = &option
-		input = options.ProcessOption(input)
-	}
 }
 
 func myTask() {

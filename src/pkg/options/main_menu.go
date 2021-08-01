@@ -42,17 +42,6 @@ func completer(d prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
 
-func Welcome() {
-	fmt.Println("------------------------------------------------")
-	fmt.Println("Welcome to Singularity! Please select a command.")
-	fmt.Println("------------------------------------------------")
-}
-
-func Prompt() string {
-	//clear()
-	return prompt.Input("@> ", completer)
-}
-
 func processMainOption(option int, input Input) Input {
 	switch option {
 	case 1:
