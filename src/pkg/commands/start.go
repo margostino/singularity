@@ -2,10 +2,23 @@ package commands
 
 import (
 	"fmt"
-	"os"
+	"github.com/jasonlvhit/gocron"
+	"time"
 )
 
 func ExecuteStart() {
 	fmt.Println("start!")
-	os.Exit(0)
+	go executeCronJob()
+}
+
+func myTask() {
+	//fmt.Println("This task will run periodically")
+}
+func executeCronJob() {
+	gocron.Every(1).Second().Do(myTask)
+	<-gocron.Start()
+}
+
+func SomeAPICallHandler() {
+	time.Sleep(10000 * time.Millisecond)
 }
