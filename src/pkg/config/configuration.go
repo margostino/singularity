@@ -11,12 +11,12 @@ type GenderWeight struct {
 }
 
 type PreLoad struct {
-	Enabled           bool
-	Population        int
-	CountriesQuantity int
-	GenderWeight      GenderWeight `yaml:"gender_weight"`
-	CountriesFile     string       `yaml:"countries_file"`
-	CountriesUrl      string       `yaml:"countries_url"`
+	Enabled       bool
+	Population    int
+	Countries     int          `yaml:"countries"`
+	GenderWeight  GenderWeight `yaml:"gender_weight"`
+	CountriesFile string       `yaml:"countries_file"`
+	CountriesUrl  string       `yaml:"countries_url"`
 }
 
 type Configuration struct {
@@ -58,5 +58,5 @@ func GetPopulation() int {
 }
 
 func GetCountries() int {
-	return configuration.PreLoad.CountriesQuantity
+	return configuration.PreLoad.Countries
 }

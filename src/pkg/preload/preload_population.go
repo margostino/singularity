@@ -11,11 +11,11 @@ import (
 )
 
 func preloadPopulation() {
-	//var population = config.GetPopulation()
-	//for i := 0; i < population; i++ {
-	//	var newPlayer = RandomPlayer()
-	//	db.AddNewPlayer(*newPlayer)
-	//}
+	var limit = config.GetPopulation()
+	for i := 0; i < limit; i++ {
+		var newPlayer = RandomPlayer()
+		db.AddNewPlayer(*newPlayer)
+	}
 }
 
 func RandomPlayer() *db.Player {

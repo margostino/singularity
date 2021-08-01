@@ -21,8 +21,10 @@ type Metadata struct {
 }
 
 func preloadCountries() {
+	var limit = config.GetCountries()
 	countries := getCountries()
-	for _, country := range countries {
+	rand.Shuffle(len(*countries), func(i, j int) { (*countries)[i], (*countries)[j] = (*countries)[j], (*countries)[i] })
+	for _, country := range (*countries)[:limit] {
 		db.AddNewCountry(country)
 	}
 }
@@ -79,32 +81,45 @@ func ParseMetadata(response interface{}) *Metadata {
 	return &metadata
 }
 
-func getCountries() []db.Country {
+func LoadCountryByApi() *[]db.Country {
 	var result []db.Country
+	var partialResult []interface{}
+	url := config.GetCountriesUrl()
+	type CountryProviderResponse interface{}
+	apiResponse := make([]CountryProviderResponse, 0)
+	client := resty.New()
+	for i := 1; i <= 6; i++ {
+		client.R().EnableTrace().SetResult(&apiResponse).Get(url + Pagination(i))
+		//metadata := ParseMetadata(apiResponse[0])
+		partialResult = append(partialResult, apiResponse[1].([]interface{})...)
+	}
+	for _, country := range partialResult {
+		result = append(result, *ParseResponse(country))
+	}
+	return &result
+}
+
+func CreateCountryFile(countries *[]db.Country, filepath string) {
+	file, _ := json.MarshalIndent(countries, "", " ")
+	_ = ioutil.WriteFile(filepath, file, 0644)
+}
+
+func ReadCountryFile(countries *[]db.Country, filepath string) *[]db.Country {
+	file, _ := ioutil.ReadFile(filepath)
+	_ = json.Unmarshal([]byte(file), &countries)
+	return countries
+}
+
+func getCountries() *[]db.Country {
+	var result *[]db.Country
 	filepath := config.GetCountriesFile()
 	_, err := os.Stat(filepath)
 
 	if os.IsNotExist(err) {
-		url := config.GetCountriesUrl()
-		type CountryProviderResponse interface{}
-		apiResponse := make([]CountryProviderResponse, 0)
-		client := resty.New()
-		client.R().EnableTrace().SetResult(&apiResponse).Get(url + Pagination(1))
-		metadata := ParseMetadata(apiResponse[0])
-		countries := apiResponse[1].([]interface{})
-		for i := 2; i <= metadata.Pages; i++ {
-			for _, country := range countries {
-				result = append(result, *ParseResponse(country))
-			}
-			client.R().EnableTrace().SetResult(&apiResponse).Get(url + Pagination(i))
-			countries = apiResponse[1].([]interface{})
-		}
-
-		file, _ := json.MarshalIndent(result, "", " ")
-		_ = ioutil.WriteFile(filepath, file, 0644)
+		result = LoadCountryByApi()
+		CreateCountryFile(result, filepath)
 	} else {
-		file, _ := ioutil.ReadFile(filepath)
-		_ = json.Unmarshal([]byte(file), &result)
+		result = ReadCountryFile(result, filepath)
 	}
 
 	//fmt.Println("Response Info:")

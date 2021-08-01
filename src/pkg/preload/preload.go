@@ -7,6 +7,6 @@ func Preload() {
 		preloadCountries()
 		preloadPopulation()
 		//preloadCompanies()
-		//preloadClimate()
+		//preloadGlobalWarming()
 	}
 }
