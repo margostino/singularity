@@ -5,7 +5,6 @@ import (
 	"org.gene/singularity/pkg/commands"
 	"org.gene/singularity/pkg/config"
 	"org.gene/singularity/pkg/preload"
-	"os"
 	"strings"
 )
 
@@ -16,23 +15,25 @@ func main() {
 	config.LoadConfiguration()
 	preload.Preload()
 	plan := Input()
-	Validate(plan)
 	Loop(plan)
 }
 
 func Loop(plan []string) {
 	for {
-		action := commandTree.LookupAction(plan)
-		action.Execute()
+		if Validate(plan) {
+			action := commandTree.LookupAction(plan)
+			action.Execute()
+		}
 		plan = Input()
 	}
 }
 
-func Validate(plan []string) {
+func Validate(plan []string) bool {
 	if !commandTree.IsValidPlan(plan) {
 		fmt.Printf("command plan %q is not valid\n", plan)
-		os.Exit(1)
+		return false
 	}
+	return true
 }
 
 func Input() []string {
