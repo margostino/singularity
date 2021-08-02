@@ -1,9 +1,13 @@
-package commands
+package command
+
+import (
+	"org.gene/singularity/pkg/action"
+)
 
 type Command struct {
 	Id          string
 	SubCommands []*Command
-	*Action
+	*action.Action
 }
 
 func NewCommand(id string) *Command {
@@ -19,14 +23,14 @@ func (c Command) SubCommand(command *Command) *Command {
 	return &c
 }
 
-func (c Command) WithAction(action *Action) *Command {
+func (c Command) WithAction(action *action.Action) *Command {
 	c.Action = action
 	return &c
 }
 
 func (c Command) Execute() {
 	if c.Action != nil {
-		c.Action.apply()
+		c.Action.Apply()
 	}
 }
 
@@ -34,16 +38,16 @@ func Load() *CommandTree {
 	commands := make([]*Command, 0)
 	show := createShowCommand()
 	create := createCreateCommand()
-	exit := createCommand("exit", NewAction(ExecuteExit))
-	start := createCommand("start", NewAction(ExecuteStart))
+	exit := createCommand("exit", action.NewAction(action.ExecuteExit))
+	start := createCommand("start", action.NewAction(action.ExecuteStart))
 	commands = append(commands, show, create, exit, start)
 	return NewCommandTree(commands)
 }
 
 func createShowCommand() *Command {
-	help := createCommand("help", NewAction(ExecuteShowHelp))
-	players := createCommand("players", NewAction(ExecuteShowPlayers))
-	stats := createCommand("stats", NewAction(ExecuteShowStats))
+	help := createCommand("help", action.NewAction(action.ExecuteShowHelp))
+	players := createCommand("players", action.NewAction(action.ExecuteShowPlayers))
+	stats := createCommand("stats", action.NewAction(action.ExecuteShowStats))
 	return NewCommand("show").
 		SubCommand(help).
 		SubCommand(players).
@@ -51,12 +55,12 @@ func createShowCommand() *Command {
 }
 
 func createCreateCommand() *Command {
-	player := createCommand("player", NewAction(ExecuteCreatePlayer))
+	player := createCommand("player", action.NewAction(action.ExecuteCreatePlayer))
 	return NewCommand("create").
 		SubCommand(player)
 }
 
-func createCommand(id string, action *Action) *Command {
+func createCommand(id string, action *action.Action) *Command {
 	return NewCommand(id).WithAction(action)
 }
 
@@ -81,7 +85,7 @@ func (c Command) Validate(plan []string) bool {
 	return false
 }
 
-func (c Command) GetAction(plan []string) *Action {
+func (c Command) GetAction(plan []string) *action.Action {
 
 	if len(plan) == 0 {
 		return nil

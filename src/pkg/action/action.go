@@ -1,16 +1,15 @@
-package commands
+package action
 
 type Action struct {
-	apply func()
-	exit  bool
+	Apply func()
 }
 
 func NewAction(apply func()) *Action {
 	return &Action{
-		apply: apply,
+		Apply: apply,
 	}
 }
 
 func (a Action) Execute() {
-	a.apply()
+	a.Apply()
 }

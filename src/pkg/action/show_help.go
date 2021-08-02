@@ -1,9 +1,12 @@
-package commands
+package action
 
-import "fmt"
+import (
+	"fmt"
+	"org.gene/singularity/pkg/option"
+)
 
 func ExecuteShowHelp() {
-	options := GetOptions()
+	options := option.GetOptions()
 	for _, option := range options {
 		fmt.Printf("[ %s ] - %s\n", option.Text, option.Description)
 	}

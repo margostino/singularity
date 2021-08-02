@@ -1,7 +1,8 @@
-package commands
+package command
 
 import (
 	"fmt"
+	"org.gene/singularity/pkg/action"
 	"testing"
 )
 
@@ -9,9 +10,9 @@ func ExecuteDummyAction() {
 	fmt.Println("dummy action")
 }
 
-func GetDummyAction() *Action {
-	return &Action{
-		apply: ExecuteDummyAction,
+func GetDummyAction() *action.Action {
+	return &action.Action{
+		Apply: ExecuteDummyAction,
 	}
 }
 

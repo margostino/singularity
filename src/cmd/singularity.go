@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
-	"org.gene/singularity/pkg/commands"
+	"org.gene/singularity/pkg/command"
 	"org.gene/singularity/pkg/config"
+	"org.gene/singularity/pkg/option"
 	"org.gene/singularity/pkg/preload"
 	"strings"
 )
 
-var commandTree = commands.Load()
+var commandTree = command.Load()
 
 func main() {
-	commands.Welcome()
+	option.Welcome()
 	config.LoadConfiguration()
 	preload.Preload()
 	plan := Input()
@@ -37,6 +38,6 @@ func Validate(plan []string) bool {
 }
 
 func Input() []string {
-	commandLine := commands.Prompt()
+	commandLine := option.Prompt()
 	return strings.Fields(commandLine)
 }

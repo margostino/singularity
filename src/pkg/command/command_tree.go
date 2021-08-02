@@ -1,4 +1,6 @@
-package commands
+package command
+
+import "org.gene/singularity/pkg/action"
 
 type CommandTree struct {
 	commands []*Command
@@ -17,8 +19,8 @@ func (tree *CommandTree) IsValidPlan(plan []string) bool {
 	return false
 }
 
-func (tree *CommandTree) LookupAction(plan []string) *Action {
-	var action *Action = nil
+func (tree *CommandTree) LookupAction(plan []string) *action.Action {
+	var action *action.Action = nil
 	for _, command := range tree.commands {
 		action = command.GetAction(plan)
 		if action != nil {
