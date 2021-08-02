@@ -12,6 +12,5 @@ func Welcome() {
 }
 
 func Prompt() string {
-	//clear()
 	return prompt.Input("@> ", Completer)
 }
