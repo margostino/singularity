@@ -3,5 +3,8 @@ package commands
 import "fmt"
 
 func ExecuteShowHelp() {
-	fmt.Println("show help")
+	options := GetOptions()
+	for _, option := range options {
+		fmt.Printf("[ %s ] - %s\n", option.Text, option.Description)
+	}
 }
