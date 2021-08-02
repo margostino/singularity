@@ -92,7 +92,10 @@ func (c Command) GetAction(plan []string) *Action {
 	}
 
 	for _, subCommand := range c.SubCommands {
-		return subCommand.GetAction(plan[1:])
+		action := subCommand.GetAction(plan[1:])
+		if action != nil {
+			return action
+		}
 	}
 
 	return nil

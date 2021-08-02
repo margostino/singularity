@@ -1,7 +1,10 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
+	"org.gene/singularity/pkg/db"
+)
 
 func ExecuteShowPlayers() {
-	fmt.Println("show players")
+	fmt.Printf("%v\n", db.Players)
 }

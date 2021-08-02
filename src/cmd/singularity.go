@@ -22,7 +22,7 @@ func main() {
 
 func Loop(plan []string) {
 	for {
-		action := commandTree.Process(plan)
+		action := commandTree.LookupAction(plan)
 		action.Execute()
 		plan = Input()
 	}

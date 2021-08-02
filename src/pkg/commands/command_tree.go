@@ -17,7 +17,7 @@ func (tree *CommandTree) IsValidPlan(plan []string) bool {
 	return false
 }
 
-func (tree *CommandTree) Process(plan []string) *Action {
+func (tree *CommandTree) LookupAction(plan []string) *Action {
 	var action *Action = nil
 	for _, command := range tree.commands {
 		action = command.GetAction(plan)
