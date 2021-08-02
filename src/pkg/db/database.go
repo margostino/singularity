@@ -32,3 +32,8 @@ func PickAddress() *Address {
 	address := country.Addresses[indexAddress]
 	return &address
 }
+
+func PickCountry() *Country {
+	indexCountry := rand.Intn(len(Countries) - 1)
+	return &Countries[indexCountry]
+}

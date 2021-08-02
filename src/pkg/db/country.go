@@ -10,13 +10,21 @@ type Region struct {
 }
 
 type Country struct {
-	Id        string
-	Name      string
-	Capital   string
-	Latitude  float64
-	Longitude float64
-	Region    Region
-	Addresses []Address
+	Id             string
+	Name           string
+	Capital        string
+	Latitude       float64
+	Longitude      float64
+	Region         Region
+	Addresses      []Address
+	WarmingMetrics []WarmingMetric
+}
+
+type WarmingMetric struct {
+	Key         string
+	Value       int
+	Unit        string
+	Description string
 }
 
 type Address struct {
