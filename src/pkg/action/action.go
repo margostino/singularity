@@ -1,15 +1,22 @@
 package action
 
 type Action struct {
-	Apply func()
+	Function      func()
+	InputFunction func([]string)
 }
 
-func NewAction(apply func()) *Action {
+func NewAction(function func()) *Action {
 	return &Action{
-		Apply: apply,
+		Function: function,
+	}
+}
+
+func NewInputAction(function func([]string)) *Action {
+	return &Action{
+		InputFunction: function,
 	}
 }
 
 func (a Action) Execute() {
-	a.Apply()
+	a.Function()
 }

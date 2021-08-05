@@ -22,8 +22,13 @@ func main() {
 func Loop(plan []string) {
 	for {
 		if Validate(plan) {
-			action := commandTree.LookupAction(plan)
-			action.Execute()
+			command := commandTree.LookupCommand(plan)
+			if command.Args > 0 {
+				args := plan[len(plan)-command.Args:]
+				command.ExecuteWith(args)
+			} else {
+				command.Execute()
+			}
 		}
 		plan = Input()
 	}

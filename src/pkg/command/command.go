@@ -6,6 +6,7 @@ import (
 
 type Command struct {
 	Id          string
+	Args        int
 	SubCommands []*Command
 	*action.Action
 }
@@ -13,6 +14,7 @@ type Command struct {
 func NewCommand(id string) *Command {
 	return &Command{
 		Id:          id,
+		Args:        0,
 		SubCommands: make([]*Command, 0),
 		Action:      nil,
 	}
@@ -23,6 +25,11 @@ func (c Command) SubCommand(command *Command) *Command {
 	return &c
 }
 
+func (c Command) WithArgs(args int) *Command {
+	c.Args = args
+	return &c
+}
+
 func (c Command) WithAction(action *action.Action) *Command {
 	c.Action = action
 	return &c
@@ -30,7 +37,13 @@ func (c Command) WithAction(action *action.Action) *Command {
 
 func (c Command) Execute() {
 	if c.Action != nil {
-		c.Action.Apply()
+		c.Action.Function()
+	}
+}
+
+func (c Command) ExecuteWith(args []string) {
+	if c.Action != nil {
+		c.Action.InputFunction(args)
 	}
 }
 
@@ -40,8 +53,15 @@ func Load() *CommandTree {
 	create := createCreateCommand()
 	exit := createCommand("exit", action.NewAction(action.ExecuteExit))
 	start := createCommand("start", action.NewAction(action.ExecuteStart))
-	commands = append(commands, show, create, exit, start)
+	selectCo := createSelectCommand()
+	commands = append(commands, show, create, exit, start, selectCo)
 	return NewCommandTree(commands)
+}
+
+func createSelectCommand() *Command {
+	player := createCommand("player", action.NewInputAction(action.ExecuteSelectPlayer)).WithArgs(1)
+	return NewCommand("select").
+		SubCommand(player)
 }
 
 func createShowCommand() *Command {
@@ -68,7 +88,7 @@ func (c Command) Validate(plan []string) bool {
 
 	if (len(plan) > 0 && plan[0] != c.Id) ||
 		(len(plan) == 1 && len(c.SubCommands) > 0) ||
-		(len(plan) > 1 && len(c.SubCommands) == 0) {
+		(len(plan) > 1 && len(c.SubCommands) == 0 && c.Args == 0) {
 		return false
 	}
 
@@ -85,20 +105,21 @@ func (c Command) Validate(plan []string) bool {
 	return false
 }
 
-func (c Command) GetAction(plan []string) *action.Action {
+func (c Command) GetLastCommand(plan []string) *Command {
 
 	if len(plan) == 0 {
 		return nil
 	}
 
-	if len(plan) == 1 && plan[0] == c.Id && c.Action != nil {
-		return c.Action
+	if (len(plan) == 1 && plan[0] == c.Id && c.Action != nil) ||
+		(c.Args > 0 && len(c.SubCommands) == 0) {
+		return &c
 	}
 
 	for _, subCommand := range c.SubCommands {
-		action := subCommand.GetAction(plan[1:])
-		if action != nil {
-			return action
+		command := subCommand.GetLastCommand(plan[1:])
+		if command != nil {
+			return command
 		}
 	}
 
