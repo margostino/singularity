@@ -7,7 +7,7 @@ import (
 type Command struct {
 	Id          string
 	Args        int
-	SubCommands []*Command
+	SubCommands map[string]*Command
 	*action.Action
 }
 
@@ -15,13 +15,13 @@ func NewCommand(id string) *Command {
 	return &Command{
 		Id:          id,
 		Args:        0,
-		SubCommands: make([]*Command, 0),
+		SubCommands: make(map[string]*Command),
 		Action:      nil,
 	}
 }
 
 func (c Command) SubCommand(command *Command) *Command {
-	c.SubCommands = append(c.SubCommands, command)
+	c.SubCommands[command.Id] = command
 	return &c
 }
 
@@ -47,7 +47,24 @@ func (c Command) ExecuteWith(args []string) {
 	}
 }
 
-func Load() *CommandTree {
+func Load() *CommandMap {
+	commands := make(map[string]*Command, 0)
+	show := createShowCommand()
+	create := createCreateCommand()
+	exit := createCommand("exit", action.NewAction(action.ExecuteExit))
+	start := createCommand("start", action.NewAction(action.ExecuteStart))
+	selectCo := createSelectCommand()
+	commands = map[string]*Command{
+		"show":   show,
+		"create": create,
+		"exit":   exit,
+		"start":  start,
+		"select": selectCo,
+	}
+	return NewCommandMap(commands)
+}
+
+func Load2() *CommandTree {
 	commands := make([]*Command, 0)
 	show := createShowCommand()
 	create := createCreateCommand()
@@ -84,42 +101,29 @@ func createCommand(id string, action *action.Action) *Command {
 	return NewCommand(id).WithAction(action)
 }
 
+func (c Command) isLastCommand(plan []string) bool {
+	return len(plan)-c.Args == 1 && plan[0] == c.Id && c.Action != nil && len(c.SubCommands) == 0
+}
+
 func (c Command) Validate(plan []string) bool {
-
-	if (len(plan) > 0 && plan[0] != c.Id) ||
-		(len(plan) == 1 && len(c.SubCommands) > 0) ||
-		(len(plan) > 1 && len(c.SubCommands) == 0 && c.Args == 0) {
-		return false
-	}
-
-	if len(c.SubCommands) == 0 && plan[0] == c.Id && c.Action != nil {
-		return true
-	}
-
-	for _, subCommand := range c.SubCommands {
-		if subCommand.Validate(plan[1:]) {
-			return true
-		}
-	}
-
-	return false
+	command := c.GetLastCommand(plan)
+	return command != nil
 }
 
 func (c Command) GetLastCommand(plan []string) *Command {
 
-	if len(plan) == 0 {
+	if len(plan) == 0 || plan[0] != c.Id {
 		return nil
 	}
 
-	if (len(plan) == 1 && plan[0] == c.Id && c.Action != nil) ||
-		(c.Args > 0 && len(c.SubCommands) == 0) {
+	if c.isLastCommand(plan) {
 		return &c
 	}
 
-	for _, subCommand := range c.SubCommands {
-		command := subCommand.GetLastCommand(plan[1:])
-		if command != nil {
-			return command
+	if len(plan) > 1 {
+		command, ok := c.SubCommands[plan[1]]
+		if ok {
+			return command.GetLastCommand(plan[1:])
 		}
 	}
 
