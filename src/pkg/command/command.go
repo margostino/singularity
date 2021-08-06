@@ -64,17 +64,6 @@ func Load() *CommandMap {
 	return NewCommandMap(commands)
 }
 
-func Load2() *CommandTree {
-	commands := make([]*Command, 0)
-	show := createShowCommand()
-	create := createCreateCommand()
-	exit := createCommand("exit", action.NewAction(action.ExecuteExit))
-	start := createCommand("start", action.NewAction(action.ExecuteStart))
-	selectCo := createSelectCommand()
-	commands = append(commands, show, create, exit, start, selectCo)
-	return NewCommandTree(commands)
-}
-
 func createSelectCommand() *Command {
 	player := createCommand("player", action.NewInputAction(action.ExecuteSelectPlayer)).WithArgs(1)
 	return NewCommand("select").
