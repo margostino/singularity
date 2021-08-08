@@ -19,3 +19,7 @@ func GetUsername() string {
 	}
 	return ""
 }
+
+func Deactivate() {
+	WorldContext = nil
+}

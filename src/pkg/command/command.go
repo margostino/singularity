@@ -53,13 +53,15 @@ func Load() *CommandMap {
 	create := createCreateCommand()
 	exit := createCommand("exit", action.NewAction(action.ExecuteExit))
 	start := createCommand("start", action.NewAction(action.ExecuteStart))
+	deactivate := createCommand("deactivate", action.NewAction(action.ExecuteDeactivate))
 	selectCo := createSelectCommand()
 	commands = map[string]*Command{
-		"show":   show,
-		"create": create,
-		"exit":   exit,
-		"start":  start,
-		"select": selectCo,
+		"show":       show,
+		"create":     create,
+		"exit":       exit,
+		"start":      start,
+		"select":     selectCo,
+		"deactivate": deactivate,
 	}
 	return NewCommandMap(commands)
 }
