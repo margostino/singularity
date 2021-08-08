@@ -34,8 +34,10 @@ func Loop() {
 	}
 }
 
-
 func Validate(plan []string) bool {
+	if len(plan) == 0 {
+		return false
+	}
 	if !commandTree.IsValidPlan(plan) {
 		fmt.Printf("command plan %q is not valid\n", plan)
 		return false
