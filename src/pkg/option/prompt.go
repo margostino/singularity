@@ -3,6 +3,7 @@ package option
 import (
 	"fmt"
 	"github.com/c-bata/go-prompt"
+	"org.gene/singularity/pkg/context"
 )
 
 func Welcome() {
@@ -12,5 +13,7 @@ func Welcome() {
 }
 
 func Prompt() string {
-	return prompt.Input("@> ", Completer)
+	username := context.GetUsername()
+	prefix := fmt.Sprintf("@%s> ", username)
+	return prompt.Input(prefix, Completer)
 }

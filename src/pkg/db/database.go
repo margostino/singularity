@@ -10,6 +10,15 @@ func AddNewPlayer(player Player) {
 	//fmt.Println("Player created successfully!")
 }
 
+func GetPlayerBy(username string) *Player {
+	for _, v := range Players {
+		if v.Username == username {
+			return &v
+		}
+	}
+	return nil
+}
+
 func GetCountryBy(name string) Country {
 	var country Country
 	for k, v := range Countries {

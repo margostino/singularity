@@ -1,11 +1,10 @@
 package action
 
 import (
-	"fmt"
+	"org.gene/singularity/pkg/context"
 )
 
 func ExecuteSelectPlayer(args []string) {
-	player := args[0]
-	fmt.Printf("player %s selected\n", player)
-	// TODO: change prompt with player, mark selected one
+	username := args[0]
+	context.NewContext(username)
 }

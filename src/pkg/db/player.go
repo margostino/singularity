@@ -10,11 +10,12 @@ import (
 )
 
 type Player struct {
-	Id      string
-	Name    string
-	Score   uint
-	Wallet  uint
-	Address Address
+	Id       string
+	Name     string
+	Username string
+	Score    uint
+	Wallet   uint
+	Address  Address
 }
 
 type Gender struct {
@@ -35,19 +36,26 @@ func CreatePlayer() {
 	fmt.Println("Name?")
 	playerName, _ := reader.ReadString('\n')
 	playerName = strings.Replace(playerName, "\n", "", -1)
-
+	var username = GetUsername(playerName)
 	var address = NewAddress()
-	var newPlayer = NewPlayer(playerName, *address)
+	var newPlayer = NewPlayer(playerName, username, *address)
 	AddNewPlayer(*newPlayer)
 }
 
-func NewPlayer(name string, address Address) *Player {
+func GetUsername(name string) string {
+	lowercase := strings.ToLower(name)
+	names := strings.Split(lowercase, " ")
+	return strings.Join(names, "_")
+}
+
+func NewPlayer(name string, username string, address Address) *Player {
 	return &Player{
-		Id:      generateId(),
-		Name:    name,
-		Score:   0,
-		Address: address,
-		Wallet:  0,
+		Id:       generateId(),
+		Name:     name,
+		Username: username,
+		Score:    0,
+		Address:  address,
+		Wallet:   0,
 	}
 }
 

@@ -22,7 +22,8 @@ func RandomPlayer() *db.Player {
 	var gender = RandomGender()
 	var name = randomdata.FullName(gender)
 	var address = db.PickAddress()
-	return db.NewPlayer(name, *address)
+	var  username = db.GetUsername(name)
+	return db.NewPlayer(name, username, *address)
 }
 
 func RandomGender() int {
