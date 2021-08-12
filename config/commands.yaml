@@ -1,0 +1,26 @@
+commands:
+  - id: show stats
+    description: "Show stats"
+    action: ExecuteShowStats
+  - id: show players
+    description: "Show current players"
+    action: ExecuteShowPlayers
+  - id: help
+    description: "List commands available"
+    action: ExecuteHelp
+  - id: exit
+    description: "Exit Game"
+    action: ExecuteExit
+  - id: start
+    description: "Start Game"
+    action: ExecuteStart
+  - id: deactivate
+    description: "Deactivate player session"
+    action: ExecuteDeactivate
+  - id: create player
+    description: "Create player"
+    action: ExecuteCreatePlayer
+  - id: select player
+    args: 1
+    description: "Select player"
+    action: ExecuteSelectPlayer

@@ -2,6 +2,8 @@ package command
 
 import (
 	"org.gene/singularity/pkg/action"
+	"org.gene/singularity/pkg/config"
+	"strings"
 )
 
 type Command struct {
@@ -9,6 +11,20 @@ type Command struct {
 	Args        int
 	SubCommands map[string]*Command
 	*action.Action
+}
+
+var ActionStorage = map[string]func(){
+	"ExecuteExit":         action.ExecuteExit,
+	"ExecuteStart":        action.ExecuteStart,
+	"ExecuteDeactivate":   action.ExecuteDeactivate,
+	"ExecuteShowPlayers":  action.ExecuteShowPlayers,
+	"ExecuteShowStats":    action.ExecuteShowStats,
+	"ExecuteHelp":         action.ExecuteHelp,
+	"ExecuteCreatePlayer": action.ExecuteCreatePlayer,
+}
+
+var InputActionStorage = map[string]func([]string){
+	"ExecuteSelectPlayer": action.ExecuteSelectPlayer,
 }
 
 func NewCommand(id string) *Command {
@@ -25,14 +41,14 @@ func (c Command) SubCommand(command *Command) *Command {
 	return &c
 }
 
-func (c Command) WithArgs(args int) *Command {
+func (c *Command) WithArgs(args int) *Command {
 	c.Args = args
-	return &c
+	return c
 }
 
-func (c Command) WithAction(action *action.Action) *Command {
+func (c *Command) WithAction(action *action.Action) *Command {
 	c.Action = action
-	return &c
+	return c
 }
 
 func (c Command) Execute() {
@@ -47,49 +63,60 @@ func (c Command) ExecuteWith(args []string) {
 	}
 }
 
-func Load() *CommandMap {
-	commands := make(map[string]*Command, 0)
-	show := createShowCommand()
-	create := createCreateCommand()
-	exit := createCommand("exit", action.NewAction(action.ExecuteExit))
-	start := createCommand("start", action.NewAction(action.ExecuteStart))
-	deactivate := createCommand("deactivate", action.NewAction(action.ExecuteDeactivate))
-	selectCo := createSelectCommand()
-	commands = map[string]*Command{
-		"show":       show,
-		"create":     create,
-		"exit":       exit,
-		"start":      start,
-		"select":     selectCo,
-		"deactivate": deactivate,
+func GetAction(command *config.CommandConfiguration) *action.Action {
+	var commandAction *action.Action = nil
+	if command.Args > 0 {
+		function := InputActionStorage[command.Action]
+		commandAction = action.NewInputAction(function)
+	} else {
+		function := ActionStorage[command.Action]
+		commandAction = action.NewAction(function)
+	}
+	return commandAction
+}
+
+func InitializeCommands() *CommandMap {
+	commands := make(map[string]*Command)
+	configuration := config.GetCommandsConfiguration()
+
+	for _, command := range configuration.CommandList {
+		subcommands := strings.Split(command.Id, " ")
+		var root *Command
+		if commands[subcommands[0]] != nil {
+			root = commands[subcommands[0]]
+		} else {
+			root = NewCommand(subcommands[0])
+			commands[subcommands[0]] = root
+		}
+
+		lastIndex := len(subcommands[1:]) - 1
+		current := root
+
+		if lastIndex == -1 {
+			action := GetAction(&command)
+			root.WithArgs(command.Args).WithAction(action)
+		}
+
+		for i, subcommand := range subcommands[1:] {
+			newCommand := createCommand(subcommand, i, lastIndex, &command)
+			current.SubCommands[newCommand.Id] = newCommand
+			current = newCommand
+		}
 	}
 	return NewCommandMap(commands)
 }
 
-func createSelectCommand() *Command {
-	player := createCommand("player", action.NewInputAction(action.ExecuteSelectPlayer)).WithArgs(1)
-	return NewCommand("select").
-		SubCommand(player)
+func createCommand(id string, currentIndex int, lastIndex int, command *config.CommandConfiguration) *Command {
+	subcommand := NewCommand(id).WithArgs(command.Args)
+	if currentIndex == lastIndex || lastIndex == -1 {
+		action := GetAction(command)
+		subcommand = subcommand.WithAction(action)
+	}
+	return subcommand
 }
 
-func createShowCommand() *Command {
-	help := createCommand("help", action.NewAction(action.ExecuteShowHelp))
-	players := createCommand("players", action.NewAction(action.ExecuteShowPlayers))
-	stats := createCommand("stats", action.NewAction(action.ExecuteShowStats))
-	return NewCommand("show").
-		SubCommand(help).
-		SubCommand(players).
-		SubCommand(stats)
-}
-
-func createCreateCommand() *Command {
-	player := createCommand("player", action.NewAction(action.ExecuteCreatePlayer))
-	return NewCommand("create").
-		SubCommand(player)
-}
-
-func createCommand(id string, action *action.Action) *Command {
-	return NewCommand(id).WithAction(action)
+func Load() *CommandMap {
+	return InitializeCommands()
 }
 
 func (c Command) isLastCommand(plan []string) bool {

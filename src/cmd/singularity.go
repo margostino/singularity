@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var commandTree = command.Load()
+var commandMap *command.CommandMap
 
 type ExecutionPlan struct {
 	Plan    []string
@@ -19,16 +19,18 @@ type ExecutionPlan struct {
 func main() {
 	option.Welcome()
 	config.LoadConfiguration()
+	config.LoadCommandsConfiguration()
 	preload.Preload()
 	Loop()
 }
 
 func Loop() {
 	var plan []string
+	commandMap = command.Load()
 	for {
 		plan = Input()
 		if Validate(plan) {
-			command := commandTree.LookupCommand(plan)
+			command := commandMap.LookupCommand(plan)
 			Prepare(plan).With(command).Execute()
 		}
 	}
@@ -38,7 +40,7 @@ func Validate(plan []string) bool {
 	if len(plan) == 0 {
 		return false
 	}
-	if !commandTree.IsValidPlan(plan) {
+	if !commandMap.IsValidPlan(plan) {
 		fmt.Printf("command plan %q is not valid\n", plan)
 		return false
 	}

@@ -23,7 +23,19 @@ type Configuration struct {
 	PreLoad PreLoad `yaml:"pre_load"`
 }
 
+type CommandConfiguration struct {
+	Id          string `yaml:"id"`
+	Description string `yaml:"description"`
+	Args        int    `yaml:"args"`
+	Action      string `yaml:"action"`
+}
+
+type CommandsConfiguration struct {
+	CommandList []CommandConfiguration `yaml:"commands"`
+}
+
 var configuration Configuration
+var commandsConfiguration CommandsConfiguration
 
 func LoadConfiguration() {
 	yamlFile, err := ioutil.ReadFile("../config/configuration.yaml")
@@ -32,6 +44,18 @@ func LoadConfiguration() {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
 	err = yaml.Unmarshal(yamlFile, &configuration)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+}
+
+func LoadCommandsConfiguration() {
+	yamlFile, err := ioutil.ReadFile("../config/commands.yaml")
+
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, &commandsConfiguration)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
@@ -59,4 +83,8 @@ func GetPopulation() int {
 
 func GetCountries() int {
 	return configuration.PreLoad.Countries
+}
+
+func GetCommandsConfiguration() *CommandsConfiguration {
+	return &commandsConfiguration
 }

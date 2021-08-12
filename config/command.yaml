@@ -1,9 +1,0 @@
-commands:
-  - id: show
-    subcommands:
-      - id: help
-        description: "Show Game Rules and Commands"
-        action: ExecuteShowHelp
-      - id: players
-        description: "Show current players"
-        action: ExecuteShowPlayers
