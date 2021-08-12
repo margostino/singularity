@@ -4,6 +4,8 @@ import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
+	"os"
+	"strings"
 )
 
 type GenderWeight struct {
@@ -37,8 +39,23 @@ type CommandsConfiguration struct {
 var configuration Configuration
 var commandsConfiguration CommandsConfiguration
 
+func GetConfigFile(filename string) string {
+	var filePath string
+	var configPath = os.Getenv("SINGULARITY_CONFIG_PATH")
+
+	if configPath == "" {
+		configPath = "../config/"
+	}
+	if strings.HasSuffix(configPath, "/") {
+		filePath = configPath + filename
+	} else {
+		filePath = configPath + "/" + filename
+	}
+	return filePath
+}
+
 func LoadConfiguration() {
-	yamlFile, err := ioutil.ReadFile("../config/configuration.yaml")
+	yamlFile, err := ioutil.ReadFile(GetConfigFile("configuration.yaml"))
 
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
@@ -50,7 +67,7 @@ func LoadConfiguration() {
 }
 
 func LoadCommandsConfiguration() {
-	yamlFile, err := ioutil.ReadFile("../config/commands.yaml")
+	yamlFile, err := ioutil.ReadFile(GetConfigFile("commands.yaml"))
 
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)

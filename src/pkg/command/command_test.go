@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"org.gene/singularity/pkg/action"
+	"org.gene/singularity/pkg/config"
 	"testing"
 )
 
@@ -28,17 +29,36 @@ func assertFalse(plan []string, commandMap *CommandMap, t *testing.T) {
 	}
 }
 
-func TestLoadCommandTree(t *testing.T) {
-	commandTree := Load()
-	plan := []string{"show", "help"}
-	assertTrue(plan, commandTree, t)
+func TestLoadCommandMap(t *testing.T) {
+	config.LoadCommandsConfiguration()
+	commandMap := Load()
+
+	plan := []string{"help"}
+	assertTrue(plan, commandMap, t)
+
 	plan = []string{"show", "players"}
-	assertTrue(plan, commandTree, t)
+	assertTrue(plan, commandMap, t)
+
 	plan = []string{"exit"}
-	assertTrue(plan, commandTree, t)
+	assertTrue(plan, commandMap, t)
+
+	plan = []string{"show", "stats"}
+	assertTrue(plan, commandMap, t)
+
+	plan = []string{"start"}
+	assertTrue(plan, commandMap, t)
+
+	plan = []string{"deactivate"}
+	assertTrue(plan, commandMap, t)
+
+	plan = []string{"create", "player"}
+	assertTrue(plan, commandMap, t)
+
+	plan = []string{"select", "player", "one"}
+	assertTrue(plan, commandMap, t)
 }
 
-func TestValidCommandTreeWithMultipleOptions(t *testing.T) {
+func TestValidCommandMapWithMultipleOptions(t *testing.T) {
 	level2a := NewCommand("help").WithAction(GetDummyAction())
 	level2b := NewCommand("player").WithAction(GetDummyAction())
 	root := NewCommand("show").SubCommand(level2a).SubCommand(level2b)
@@ -55,7 +75,7 @@ func TestValidCommandTreeWithMultipleOptions(t *testing.T) {
 	assertFalse(plan, commandMap, t)
 }
 
-func TestValidCommandTreeWith2Levels(t *testing.T) {
+func TestValidCommandMapWith2Levels(t *testing.T) {
 	level2 := NewCommand("command2_2").WithAction(GetDummyAction())
 	root := NewCommand("command1_2").SubCommand(level2)
 	commands := map[string]*Command{"command1_2": root}
@@ -64,7 +84,7 @@ func TestValidCommandTreeWith2Levels(t *testing.T) {
 	assertTrue(plan, commandMap, t)
 }
 
-func TestValidCommandTreeWith3Levels(t *testing.T) {
+func TestValidCommandMapWith3Levels(t *testing.T) {
 	level3 := NewCommand("command3_3").WithAction(GetDummyAction())
 	level2 := NewCommand("command2_3").SubCommand(level3)
 	root := NewCommand("command1_3").SubCommand(level2)
@@ -74,7 +94,7 @@ func TestValidCommandTreeWith3Levels(t *testing.T) {
 	assertTrue(plan, commandMap, t)
 }
 
-func TestInvalidCommandTree(t *testing.T) {
+func TestInvalidCommandMap(t *testing.T) {
 	level3 := NewCommand("command3_3").WithAction(GetDummyAction())
 	level2 := NewCommand("command2_3").SubCommand(level3)
 	root := NewCommand("command1_3").SubCommand(level2)
