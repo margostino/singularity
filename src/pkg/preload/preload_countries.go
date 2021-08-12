@@ -2,6 +2,7 @@ package preload
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/go-resty/resty/v2"
 	"io/ioutil"
@@ -21,7 +22,7 @@ type Metadata struct {
 }
 
 func preloadCountries() {
-	var limit = config.GetCountries()
+	var limit = config.GetMaxCountries()
 	countries := getCountries()
 	rand.Shuffle(len(*countries), func(i, j int) { (*countries)[i], (*countries)[j] = (*countries)[j], (*countries)[i] })
 	for _, country := range (*countries)[:limit] {
@@ -95,7 +96,7 @@ func ParseMetadata(response interface{}) *Metadata {
 	return &metadata
 }
 
-func LoadCountryByApi() *[]db.Country {
+func LoadCountriesByApi() *[]db.Country {
 	var result []db.Country
 	var partialResult []interface{}
 	url := config.GetCountriesUrl()
@@ -118,7 +119,7 @@ func CreateCountryFile(countries *[]db.Country, filepath string) {
 	_ = ioutil.WriteFile(filepath, file, 0644)
 }
 
-func ReadCountryFile(countries *[]db.Country, filepath string) *[]db.Country {
+func LoadCountriesByFile(countries *[]db.Country, filepath string) *[]db.Country {
 	file, _ := ioutil.ReadFile(filepath)
 	_ = json.Unmarshal([]byte(file), &countries)
 	return countries
@@ -127,13 +128,17 @@ func ReadCountryFile(countries *[]db.Country, filepath string) *[]db.Country {
 func getCountries() *[]db.Country {
 	var result *[]db.Country
 	filepath := config.GetCountriesFile()
-	_, err := os.Stat(filepath)
 
-	if os.IsNotExist(err) {
-		result = LoadCountryByApi()
+	if config.ShouldUpdateCountries() {
+		result = LoadCountriesByApi()
 		CreateCountryFile(result, filepath)
 	} else {
-		result = ReadCountryFile(result, filepath)
+		_, err := os.Stat(filepath)
+		if os.IsNotExist(err) {
+			fmt.Println("Countries do not exist in File")
+			os.Exit(1)
+		}
+		result = LoadCountriesByFile(result, filepath)
 	}
 
 	//fmt.Println("Response Info:")

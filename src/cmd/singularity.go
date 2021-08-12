@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"org.gene/singularity/pkg/command"
 	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/option"
 	"org.gene/singularity/pkg/preload"
-	"strings"
+	"org.gene/singularity/pkg/shell"
 )
 
 var commandMap *command.CommandMap
@@ -17,18 +16,18 @@ type ExecutionPlan struct {
 }
 
 func main() {
-	option.Welcome()
+	shell.Welcome()
 	config.LoadConfiguration()
-	config.LoadCommandsConfiguration()
 	preload.Preload()
 	Loop()
 }
 
 func Loop() {
 	var plan []string
+	powershell := shell.NewShell()
 	commandMap = command.Load()
 	for {
-		plan = Input()
+		plan = powershell.Input()
 		if Validate(plan) {
 			command := commandMap.LookupCommand(plan)
 			Prepare(plan).With(command).Execute()
@@ -45,11 +44,6 @@ func Validate(plan []string) bool {
 		return false
 	}
 	return true
-}
-
-func Input() []string {
-	commandLine := option.Prompt()
-	return strings.Fields(commandLine)
 }
 
 func Prepare(plan []string) *ExecutionPlan {

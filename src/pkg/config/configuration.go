@@ -13,12 +13,13 @@ type GenderWeight struct {
 }
 
 type PreLoad struct {
-	Enabled       bool
-	Population    int
-	Countries     int          `yaml:"countries"`
-	GenderWeight  GenderWeight `yaml:"gender_weight"`
-	CountriesFile string       `yaml:"countries_file"`
-	CountriesUrl  string       `yaml:"countries_url"`
+	Enabled         bool
+	Population      int
+	MaxCountries    int          `yaml:"max_countries"`
+	UpdateCountries bool         `yaml:"update_countries`
+	GenderWeight    GenderWeight `yaml:"gender_weight"`
+	CountriesFile   string       `yaml:"countries_file"`
+	CountriesUrl    string       `yaml:"countries_url"`
 }
 
 type Configuration struct {
@@ -64,6 +65,8 @@ func LoadConfiguration() {
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
+
+	LoadCommandsConfiguration()
 }
 
 func LoadCommandsConfiguration() {
@@ -98,8 +101,12 @@ func GetPopulation() int {
 	return configuration.PreLoad.Population
 }
 
-func GetCountries() int {
-	return configuration.PreLoad.Countries
+func GetMaxCountries() int {
+	return configuration.PreLoad.MaxCountries
+}
+
+func ShouldUpdateCountries() bool {
+	return configuration.PreLoad.UpdateCountries
 }
 
 func GetCommandsConfiguration() *CommandsConfiguration {
