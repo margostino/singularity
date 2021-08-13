@@ -32,7 +32,7 @@ func (s *Shell) Input() []string {
 	return strings.Fields(commandLine)
 }
 
-func NewShell() {
+func NewShell() *Shell {
 	var suggestions = make([]prompt.Suggest, 0)
 	commands := config.GetCommandsConfiguration().CommandList
 
@@ -50,6 +50,7 @@ func NewShell() {
 		suggestions = append(suggestions, suggestion)
 	}
 	PowerShell = &Shell{Suggestions: suggestions}
+	return PowerShell
 }
 
 func Completer(suggestions []prompt.Suggest) func(d prompt.Document) []prompt.Suggest {

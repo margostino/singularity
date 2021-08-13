@@ -13,20 +13,6 @@ type Command struct {
 	*action.Action
 }
 
-var ActionStorage = map[string]func(){
-	"ExecuteExit":         action.ExecuteExit,
-	"ExecuteStart":        action.ExecuteStart,
-	"ExecuteDeactivate":   action.ExecuteDeactivate,
-	"ExecuteShowPlayers":  action.ExecuteShowPlayers,
-	"ExecuteShowStats":    action.ExecuteShowStats,
-	"ExecuteHelp":         action.ExecuteHelp,
-	"ExecuteCreatePlayer": action.ExecuteCreatePlayer,
-}
-
-var InputActionStorage = map[string]func([]string){
-	"ExecuteSelectPlayer": action.ExecuteSelectPlayer,
-}
-
 func NewCommand(id string) *Command {
 	return &Command{
 		Id:          id,
@@ -66,10 +52,10 @@ func (c Command) ExecuteWith(args []string) {
 func GetAction(command *config.CommandConfiguration) *action.Action {
 	var commandAction *action.Action = nil
 	if command.Args > 0 {
-		function := InputActionStorage[command.Action]
+		function := action.InputActionStorage[command.Action]
 		commandAction = action.NewInputAction(function)
 	} else {
-		function := ActionStorage[command.Action]
+		function := action.ActionStorage[command.Action]
 		commandAction = action.NewAction(function)
 	}
 	return commandAction
