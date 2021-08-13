@@ -24,10 +24,10 @@ func main() {
 
 func Loop() {
 	var plan []string
-	powershell := shell.NewShell()
+	shell.NewShell()
 	commandMap = command.Load()
 	for {
-		plan = powershell.Input()
+		plan = shell.PowerShell.Input()
 		if Validate(plan) {
 			command := commandMap.LookupCommand(plan)
 			Prepare(plan).With(command).Execute()

@@ -5,6 +5,7 @@ import (
 	"github.com/c-bata/go-prompt"
 	"org.gene/singularity/pkg/config"
 	"org.gene/singularity/pkg/context"
+	"strconv"
 	"strings"
 )
 
@@ -12,7 +13,7 @@ type Shell struct {
 	Suggestions []prompt.Suggest
 }
 
-var PowerShell = NewShell()
+var PowerShell *Shell
 
 func Welcome() {
 	fmt.Println("------------------------------------------------")
@@ -31,19 +32,24 @@ func (s *Shell) Input() []string {
 	return strings.Fields(commandLine)
 }
 
-func NewShell() *Shell {
+func NewShell() {
 	var suggestions = make([]prompt.Suggest, 0)
 	commands := config.GetCommandsConfiguration().CommandList
 
 	for _, command := range commands {
+		var commandText string
+		if command.Args > 0 {
+			commandText = command.Id + " x" + strconv.Itoa(command.Args)
+		} else {
+			commandText = command.Id
+		}
 		suggestion := prompt.Suggest{
-			Text:        command.Id,
+			Text:        commandText,
 			Description: command.Description,
 		}
 		suggestions = append(suggestions, suggestion)
 	}
-
-	return &Shell{Suggestions: suggestions}
+	PowerShell = &Shell{Suggestions: suggestions}
 }
 
 func Completer(suggestions []prompt.Suggest) func(d prompt.Document) []prompt.Suggest {
