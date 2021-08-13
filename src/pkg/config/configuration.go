@@ -24,6 +24,8 @@ type PreLoad struct {
 
 type Configuration struct {
 	PreLoad PreLoad `yaml:"pre_load"`
+	Welcome string  `yaml:"welcome"`
+	Version string  `yaml:"version"`
 }
 
 type CommandConfiguration struct {
@@ -111,4 +113,12 @@ func ShouldUpdateCountries() bool {
 
 func GetCommandsConfiguration() *CommandsConfiguration {
 	return &commandsConfiguration
+}
+
+func Version() string {
+	return configuration.Version
+}
+
+func Welcome() string {
+	return configuration.Welcome
 }

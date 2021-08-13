@@ -16,9 +16,7 @@ type Shell struct {
 var PowerShell *Shell
 
 func Welcome() {
-	fmt.Println("------------------------------------------------")
-	fmt.Println("Welcome to Singularity! Please select a command.")
-	fmt.Println("------------------------------------------------")
+	fmt.Printf("%s (v.%s)\n", config.Welcome(), config.Version())
 }
 
 func (s *Shell) Prompt() string {
