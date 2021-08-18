@@ -1,0 +1,39 @@
+welcome: Welcome to Singularity!
+version: 0.0.1
+
+pre_load:
+  enabled: true
+  population: 10
+  max_countries: 4
+  countries_file: ../data/countries.json
+  countries_url: https://api.worldbank.org/v2/country?format=json
+  update_countries: false
+  gender_weight:
+    male: 5
+    female: 5
+  jobs:
+    - type: engineering
+      quantity: 10
+    - type: finance
+      quantity: 10
+    - type: health
+      quantity: 10
+
+time:
+  unit: hour
+  second_conversion: 1
+
+metrics:
+  - id: co2_emissions
+    unit: tonnes
+    description: "CO2 average per capita"
+  - id: air_quality
+    unit: pm
+    description: "Air Quality Index"
+
+jobs:
+  - id: air_quality
+    type: some
+    schedule: "* * * * *"
+    url: https://api.waqi.info/feed
+    token: ${AIR_QUALITY_TOKEN}
