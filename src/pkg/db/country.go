@@ -16,13 +16,13 @@ type Country struct {
 	Latitude       float64
 	Longitude      float64
 	Region         Region
-	Addresses      []Address
 	WarmingMetrics []WarmingMetric
+	Addresses      []Address
 }
 
 type WarmingMetric struct {
 	Key         string
-	Value       int
+	Value       float64
 	Unit        string
 	Description string
 }

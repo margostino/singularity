@@ -17,3 +17,5 @@
 # Idea
 .idea/
 *.iml
+
+..bfg-report/

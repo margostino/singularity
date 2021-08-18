@@ -16,16 +16,32 @@ type PreLoad struct {
 	Enabled         bool
 	Population      int
 	MaxCountries    int          `yaml:"max_countries"`
-	UpdateCountries bool         `yaml:"update_countries`
+	UpdateCountries bool         `yaml:"update_countries"`
 	GenderWeight    GenderWeight `yaml:"gender_weight"`
 	CountriesFile   string       `yaml:"countries_file"`
 	CountriesUrl    string       `yaml:"countries_url"`
 }
 
+type Job struct {
+	Id       string `yaml:"id"`
+	Type     string `yaml:"type"`
+	Schedule string `yaml:"schedule"`
+	Url      string `yaml:"url"`
+	Token    string `yaml:"token"`
+}
+
+type Metrics struct {
+	Id          string `yaml:"id"`
+	Unit        string `yaml:"unit"`
+	Description string `yaml:"description"`
+}
+
 type Configuration struct {
-	PreLoad PreLoad `yaml:"pre_load"`
-	Welcome string  `yaml:"welcome"`
-	Version string  `yaml:"version"`
+	PreLoad PreLoad   `yaml:"pre_load"`
+	Welcome string    `yaml:"welcome"`
+	Version string    `yaml:"version"`
+	Metrics []Metrics `yaml:"metrics"`
+	Jobs    []Job     `yaml:"jobs"`
 }
 
 type CommandConfiguration struct {
@@ -105,6 +121,23 @@ func GetPopulation() int {
 
 func GetMaxCountries() int {
 	return configuration.PreLoad.MaxCountries
+}
+
+func GetJobsConfiguration() *[]Job {
+	return &configuration.Jobs
+}
+
+func GetMetricsConfiguration() *[]Metrics {
+	return &configuration.Metrics
+}
+
+func GetJobsConfigurationBy(id string) *Job {
+	for _, job := range configuration.Jobs {
+		if job.Id == id {
+			return &job
+		}
+	}
+	return nil
 }
 
 func ShouldUpdateCountries() bool {

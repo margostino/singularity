@@ -6,8 +6,9 @@ import (
 )
 
 func ExecuteShowStats() {
+	var avg float64
 	total := len(db.Countries)
-	sum := 0
+	sum := 0.0
 	var unit string
 	for _, country := range db.Countries {
 		for _, metric := range country.WarmingMetrics {
@@ -17,5 +18,6 @@ func ExecuteShowStats() {
 			}
 		}
 	}
-	fmt.Printf("Global CO2 Emissions: %v %s\n", sum/total, unit)
+	avg = sum/float64(total)
+	fmt.Printf("Global CO2 Emissions: %f %s\n", avg, unit)
 }

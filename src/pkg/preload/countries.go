@@ -44,18 +44,6 @@ func RandomAddress() *db.Address {
 	}
 }
 
-func getWarmingMetrics() []db.WarmingMetric {
-	value := rand.Intn(100)
-	return []db.WarmingMetric{
-		{
-			Key:         "co2_emissions",
-			Value:       value,
-			Unit:        "tonnes",
-			Description: "CO2 average per capita.",
-		},
-	}
-}
-
 func getAddresses() []db.Address {
 	var addresses []db.Address
 	addressQuantity := rand.Intn(100)
@@ -77,7 +65,7 @@ func ParseResponse(country interface{}) *db.Country {
 	latitude, _ := strconv.ParseFloat(countryMap["latitude"].(string), 64)
 	longitude, _ := strconv.ParseFloat(countryMap["longitude"].(string), 64)
 	addresses := getAddresses()
-	warmingMetrics := getWarmingMetrics()
+	warmingMetrics := InitializeWarmingMetrics()
 	return &db.Country{Id: countryMap["id"].(string),
 		Name:           countryMap["name"].(string),
 		Capital:        countryMap["capitalCity"].(string),

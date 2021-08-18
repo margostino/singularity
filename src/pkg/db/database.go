@@ -7,7 +7,6 @@ var Countries []Country
 
 func AddNewPlayer(player Player) {
 	Players = append(Players, player)
-	//fmt.Println("Player created successfully!")
 }
 
 func GetPlayerBy(username string) *Player {
@@ -45,4 +44,8 @@ func PickAddress() *Address {
 func PickCountry() *Country {
 	indexCountry := rand.Intn(len(Countries) - 1)
 	return &Countries[indexCountry]
+}
+
+func GetCountries() *[]Country {
+	return &Countries
 }
