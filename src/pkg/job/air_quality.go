@@ -19,5 +19,6 @@ func GetAirQualityFor(latitude float64, longitude float64) float64 {
 	url := fmt.Sprintf("%s/geo:%s;%s/?token=%s", config.Url, lat, long, config.Token)
 	client := resty.New()
 	client.R().EnableTrace().SetResult(&apiResponse).Get(url)
+	// TODO: validate apiResponse.Status = "error"
 	return apiResponse.Data["aqi"].(float64)
 }

@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"github.com/jasonlvhit/gocron"
 	"math/rand"
+	"org.gene/singularity/pkg/context"
 	"org.gene/singularity/pkg/db"
 	"org.gene/singularity/pkg/job"
 	"time"
 )
 
 func ExecuteStart() {
+	context.SetRunning()
 	fmt.Println("start!")
 	go runJobs()
 }

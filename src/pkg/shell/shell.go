@@ -21,8 +21,9 @@ func Welcome() {
 
 func (s *Shell) Prompt() string {
 	username := context.GetUsername()
-	prefix := fmt.Sprintf("@%s> ", username)
-	return prompt.Input(prefix, Completer(s.Suggestions))
+	state := context.GetState()
+	prefix := fmt.Sprintf("%s@%s> ", state, username)
+	return prompt.Input(strings.ToLower(prefix), Completer(s.Suggestions))
 }
 
 func (s *Shell) Input() []string {
