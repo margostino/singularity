@@ -60,10 +60,10 @@ func Pagination(page int) string {
 
 func ParseResponse(country interface{}) *db.Country {
 	countryMap := country.(map[string]interface{})
-	regionMap := countryMap["region"].(map[string]interface{})
-	region := db.Region{Id: regionMap["id"].(string), Name: regionMap["value"].(string)}
 	latitude, _ := strconv.ParseFloat(countryMap["latitude"].(string), 64)
 	longitude, _ := strconv.ParseFloat(countryMap["longitude"].(string), 64)
+	regionMap := countryMap["region"].(map[string]interface{})
+	region := db.Region{Id: regionMap["id"].(string), Name: regionMap["value"].(string)}
 	addresses := getAddresses()
 	warmingMetrics := InitializeWarmingMetrics()
 	return &db.Country{Id: countryMap["id"].(string),

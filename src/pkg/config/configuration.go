@@ -79,6 +79,7 @@ func LoadConfiguration() {
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
+	yamlFile = []byte(os.ExpandEnv(string(yamlFile)))
 	err = yaml.Unmarshal(yamlFile, &configuration)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
