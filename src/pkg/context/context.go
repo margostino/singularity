@@ -9,6 +9,7 @@ const (
 	Ready
 	Stopped
 	Paused
+	Guess = "guess"
 )
 
 func (s State) String() string {
@@ -20,11 +21,11 @@ type GameContext struct {
 	State  State
 }
 
-var WorldContext *GameContext
+var worldContext *GameContext
 
 func NewContext(username string) {
 	player := db.GetPlayerBy(username)
-	WorldContext = &GameContext{
+	worldContext = &GameContext{
 		Player: player,
 		State:  Ready,
 	}
@@ -32,23 +33,31 @@ func NewContext(username string) {
 
 func SetRunning() {
 	// TODO: validate WorldContext == nil
-	WorldContext.State = Running
+	worldContext.State = Running
 }
 
 func GetUsername() string {
-	if WorldContext != nil && WorldContext.Player != nil {
-		return WorldContext.Player.Username
+	if worldContext != nil && worldContext.Player != nil {
+		return worldContext.Player.Username
 	}
-	return "guess"
+	return Guess
 }
 
 func GetState() State {
-	if WorldContext != nil {
-		return WorldContext.State
+	if worldContext != nil {
+		return worldContext.State
 	}
 	return Ready
 }
 
 func Deactivate() {
-	WorldContext = nil
+	worldContext = nil
+}
+
+func IsPlayerSelected() bool {
+	return worldContext.Player != nil
+}
+
+func Exit() {
+	worldContext.Player = nil
 }

@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"org.gene/singularity/pkg/context"
 	"os"
 )
 
@@ -10,6 +11,10 @@ type Exit struct {
 }
 
 func ExecuteExit() {
-	fmt.Println("bye!")
-	os.Exit(0)
+	if context.IsPlayerSelected() {
+		context.Exit()
+	} else {
+		fmt.Println("bye!")
+		os.Exit(0)
+	}
 }
