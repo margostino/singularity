@@ -34,6 +34,6 @@ metrics:
 jobs:
   - id: air_quality
     type: some
-    schedule: "* * * * *"
+    schedule: daily
     url: https://api.waqi.info/feed
     token: ${AIR_QUALITY_TOKEN}
