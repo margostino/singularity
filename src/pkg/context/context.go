@@ -1,6 +1,10 @@
 package context
 
-import "org.gene/singularity/pkg/db"
+import (
+	"fmt"
+	"org.gene/singularity/pkg/db"
+	"time"
+)
 
 type State int
 
@@ -16,19 +20,39 @@ func (s State) String() string {
 	return [...]string{"Running", "Ready", "Stopped", "Paused"}[s]
 }
 
-type GameContext struct {
-	Player *db.Player
-	State  State
+type WorldContext struct {
+	State State
+	Clock time.Time
 }
 
-var worldContext *GameContext
+type PlayerContext struct {
+	Player *db.Player
+}
 
-func NewContext(username string) {
+var worldContext *WorldContext
+var playerContext *PlayerContext
+
+func NewContextBy(username string) {
 	player := db.GetPlayerBy(username)
-	worldContext = &GameContext{
+	playerContext = &PlayerContext{
 		Player: player,
-		State:  Ready,
 	}
+}
+
+func NewWorldContext() {
+	worldContext = &WorldContext{
+		State: Ready,
+		Clock: time.Now(),
+	}
+}
+
+func Print() {
+	context := map[string]interface{}{
+		"player": playerContext.Player.Username,
+		"state":  worldContext.State,
+		"clock":  worldContext.Clock,
+	}
+	fmt.Printf("%v\n", context)
 }
 
 func SetRunning() {
@@ -36,9 +60,19 @@ func SetRunning() {
 	worldContext.State = Running
 }
 
+func UpdateDayCycle() {
+	// TODO: validate WorldContext == nil
+	worldContext.Clock = worldContext.Clock.AddDate(0, 0, 1)
+}
+
+func UpdateWorldCycle() {
+	// TODO: validate WorldContext == nil
+	worldContext.Clock = worldContext.Clock.Add(time.Hour)
+}
+
 func GetUsername() string {
-	if worldContext != nil && worldContext.Player != nil {
-		return worldContext.Player.Username
+	if playerContext != nil && playerContext.Player != nil {
+		return playerContext.Player.Username
 	}
 	return Guess
 }
@@ -50,14 +84,21 @@ func GetState() State {
 	return Ready
 }
 
+func GetClock() string {
+	if worldContext != nil {
+		return worldContext.Clock.Format("2006-01-02 3 PM")
+	}
+	return time.Now().Format("2006-01-02 3 PM")
+}
+
 func Deactivate() {
 	worldContext = nil
 }
 
 func IsPlayerSelected() bool {
-	return worldContext.Player != nil
+	return playerContext != nil && playerContext.Player != nil
 }
 
 func Exit() {
-	worldContext.Player = nil
+	playerContext.Player = nil
 }

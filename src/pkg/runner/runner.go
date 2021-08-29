@@ -3,6 +3,7 @@ package runner
 import (
 	"fmt"
 	"org.gene/singularity/pkg/command"
+	"org.gene/singularity/pkg/context"
 	"org.gene/singularity/pkg/shell"
 )
 
@@ -17,6 +18,7 @@ func Loop() {
 	var plan []string
 	powershell := shell.NewShell()
 	commandMap = command.Load()
+	context.NewWorldContext()
 	for {
 		plan = powershell.Input()
 		if Validate(plan) {

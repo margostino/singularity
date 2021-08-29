@@ -14,6 +14,7 @@ type Worker struct {
 
 var ActionStorage = map[string]func(){
 	"air_quality": UpdateAirQuality,
+	"world_cycle": UpdateWorldCycle,
 }
 
 func LoadJobs() {

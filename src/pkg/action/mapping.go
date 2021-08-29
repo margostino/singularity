@@ -8,6 +8,7 @@ var ActionStorage = map[string]func(){
 	"ExecuteShowStats":    ExecuteShowStats,
 	"ExecuteHelp":         ExecuteHelp,
 	"ExecuteCreatePlayer": ExecuteCreatePlayer,
+	"ExecuteShowContext":  ExecuteShowContext,
 }
 
 var InputActionStorage = map[string]func([]string){

@@ -1,4 +1,7 @@
 commands:
+  - id: show context
+    description: "Show World Context"
+    action: ExecuteShowContext
   - id: show stats
     description: "Show stats"
     action: ExecuteShowStats

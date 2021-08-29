@@ -32,8 +32,11 @@ metrics:
     description: "Air Quality Index"
 
 jobs:
+  - id: world_cycle
+    type: some #TBD
+    schedule: hourly
   - id: air_quality
-    type: some
+    type: some #TBD
     schedule: daily
     url: https://api.waqi.info/feed
     token: ${AIR_QUALITY_TOKEN}

@@ -1,10 +1,9 @@
 package action
 
 import (
-	"fmt"
-	"org.gene/singularity/pkg/db"
+	"org.gene/singularity/pkg/context"
 )
 
-func ExecuteShowPlayers() {
-	fmt.Printf("%v\n", db.Players)
+func ExecuteShowContext() {
+	context.Print()
 }

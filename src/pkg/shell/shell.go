@@ -22,7 +22,8 @@ func Welcome() {
 func (s *Shell) Prompt() string {
 	username := context.GetUsername()
 	state := context.GetState()
-	prefix := fmt.Sprintf("%s@%s> ", state, username)
+	clock := context.GetClock()
+	prefix := fmt.Sprintf("%s@%s(%s)> ", state, username, clock)
 	return prompt.Input(strings.ToLower(prefix), Completer(s.Suggestions))
 }
 
