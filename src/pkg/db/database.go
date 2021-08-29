@@ -46,6 +46,11 @@ func PickCountry() *Country {
 	return &Countries[indexCountry]
 }
 
+func PickPlayer() *Player {
+	indexPlayer := rand.Intn(len(Players) - 1)
+	return &Players[indexPlayer]
+}
+
 func GetCountries() *[]Country {
 	return &Countries
 }

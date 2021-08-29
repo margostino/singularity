@@ -27,3 +27,6 @@ commands:
     args: 1
     description: "Select player"
     action: ExecuteSelectPlayer
+  - id: random player
+    description: "Select random player"
+    action: ExecuteRandomPlayer
