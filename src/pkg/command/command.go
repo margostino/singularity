@@ -1,8 +1,8 @@
 package command
 
 import (
-	"org.gene/singularity/pkg/action"
-	"org.gene/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/action"
+	"github.com/margostino/singularity/pkg/config"
 	"strings"
 )
 

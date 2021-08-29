@@ -2,7 +2,7 @@ package action
 
 import (
 	"github.com/jasonlvhit/gocron"
-	"org.gene/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/context"
 )
 
 func ExecuteDeactivate() {

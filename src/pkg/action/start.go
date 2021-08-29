@@ -2,9 +2,9 @@ package action
 
 import (
 	"math/rand"
-	"org.gene/singularity/pkg/context"
-	"org.gene/singularity/pkg/db"
-	"org.gene/singularity/pkg/job"
+	"github.com/margostino/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/db"
+	"github.com/margostino/singularity/pkg/job"
 	"time"
 )
 

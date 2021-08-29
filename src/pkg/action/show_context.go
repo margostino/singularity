@@ -1,7 +1,7 @@
 package action
 
 import (
-	"org.gene/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/context"
 )
 
 func ExecuteShowContext() {

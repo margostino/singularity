@@ -1,4 +1,4 @@
-module org.gene/singularity
+module github.com/margostino/singularity
 
 go 1.16
 

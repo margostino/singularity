@@ -2,8 +2,8 @@ package preload
 
 import (
 	"math/rand"
-	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/db"
+	"github.com/margostino/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/db"
 )
 
 func InitializeWarmingMetrics() []db.WarmingMetric {

@@ -2,7 +2,7 @@ package action
 
 import (
 	"fmt"
-	"org.gene/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/context"
 	"os"
 )
 

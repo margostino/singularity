@@ -1,11 +1,11 @@
 package main
 
 import (
-	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/job"
-	"org.gene/singularity/pkg/preload"
-	"org.gene/singularity/pkg/runner"
-	"org.gene/singularity/pkg/shell"
+	"github.com/margostino/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/job"
+	"github.com/margostino/singularity/pkg/preload"
+	"github.com/margostino/singularity/pkg/runner"
+	"github.com/margostino/singularity/pkg/shell"
 )
 
 func main() {

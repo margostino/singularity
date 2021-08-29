@@ -1,6 +1,6 @@
 package preload
 
-import "org.gene/singularity/pkg/config"
+import "github.com/margostino/singularity/pkg/config"
 
 func Preload() {
 	if config.IsPreLoadEnabled() {

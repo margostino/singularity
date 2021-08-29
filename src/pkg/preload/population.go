@@ -5,8 +5,8 @@ import (
 	"github.com/Pallinder/go-randomdata"
 	wr "github.com/mroth/weightedrand"
 	"math/rand"
-	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/db"
+	"github.com/margostino/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/db"
 	"time"
 )
 

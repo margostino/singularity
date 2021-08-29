@@ -2,7 +2,7 @@ package action
 
 import (
 	"fmt"
-	"org.gene/singularity/pkg/shell"
+	"github.com/margostino/singularity/pkg/shell"
 )
 
 func ExecuteHelp() {

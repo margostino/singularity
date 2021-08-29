@@ -3,8 +3,8 @@ package job
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/db"
+	"github.com/margostino/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/db"
 )
 
 type AirQualityResponse struct {

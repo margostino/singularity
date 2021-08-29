@@ -1,8 +1,8 @@
 package action
 
 import (
-	"org.gene/singularity/pkg/context"
-	"org.gene/singularity/pkg/db"
+	"github.com/margostino/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/db"
 )
 
 func ExecuteRandomPlayer() {

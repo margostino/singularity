@@ -2,7 +2,7 @@ package job
 
 import (
 	"github.com/jasonlvhit/gocron"
-	"org.gene/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/config"
 )
 
 var WorkersPool []Worker

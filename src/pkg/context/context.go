@@ -2,7 +2,7 @@ package context
 
 import (
 	"fmt"
-	"org.gene/singularity/pkg/db"
+	"github.com/margostino/singularity/pkg/db"
 	"time"
 )
 

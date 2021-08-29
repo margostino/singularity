@@ -3,8 +3,8 @@ package shell
 import (
 	"fmt"
 	"github.com/c-bata/go-prompt"
-	"org.gene/singularity/pkg/config"
-	"org.gene/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/config"
+	"github.com/margostino/singularity/pkg/context"
 	"strconv"
 	"strings"
 )

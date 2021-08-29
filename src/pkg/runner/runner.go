@@ -2,9 +2,9 @@ package runner
 
 import (
 	"fmt"
-	"org.gene/singularity/pkg/command"
-	"org.gene/singularity/pkg/context"
-	"org.gene/singularity/pkg/shell"
+	"github.com/margostino/singularity/pkg/command"
+	"github.com/margostino/singularity/pkg/context"
+	"github.com/margostino/singularity/pkg/shell"
 )
 
 var commandMap *command.CommandMap
