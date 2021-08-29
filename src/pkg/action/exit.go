@@ -11,10 +11,7 @@ type Exit struct {
 }
 
 func ExecuteExit() {
-	if context.IsPlayerSelected() {
-		context.Exit()
-	} else {
-		fmt.Println("bye!")
-		os.Exit(0)
-	}
+	context.Deactivate()
+	fmt.Println("bye!")
+	os.Exit(0)
 }

@@ -60,13 +60,9 @@ func SetRunning() {
 	worldContext.State = Running
 }
 
-func UpdateDayCycle() {
-	// TODO: validate WorldContext == nil
-	worldContext.Clock = worldContext.Clock.AddDate(0, 0, 1)
-}
-
 func UpdateWorldCycle() {
 	// TODO: validate WorldContext == nil
+	//worldContext.Clock = worldContext.Clock.AddDate(0, 0, 1)
 	worldContext.Clock = worldContext.Clock.Add(time.Hour)
 }
 
@@ -92,7 +88,8 @@ func GetClock() string {
 }
 
 func Deactivate() {
-	worldContext = nil
+	playerContext = nil
+	worldContext.State = Ready
 }
 
 func IsPlayerSelected() bool {
