@@ -3,10 +3,10 @@ package preload
 import (
 	"fmt"
 	"github.com/Pallinder/go-randomdata"
-	wr "github.com/mroth/weightedrand"
-	"math/rand"
 	"github.com/margostino/singularity/pkg/config"
 	"github.com/margostino/singularity/pkg/db"
+	wr "github.com/mroth/weightedrand"
+	"math/rand"
 	"time"
 )
 

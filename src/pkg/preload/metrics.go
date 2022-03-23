@@ -1,9 +1,9 @@
 package preload
 
 import (
-	"math/rand"
 	"github.com/margostino/singularity/pkg/config"
 	"github.com/margostino/singularity/pkg/db"
+	"math/rand"
 )
 
 func InitializeWarmingMetrics() []db.WarmingMetric {
